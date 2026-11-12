@@ -1,9 +1,9 @@
-# Plan del proyecto (v2): `envcheck` — CLI para validar archivos `.env`
+# Plan del proyecto (v2): `envparity` — CLI para validar archivos `.env`
 
 Proyecto de portafolio de 1 a 2 semanas, pensado para verse terminado y publicado sin costo.
 
 **Stack:** C# / .NET 10 (LTS) → `dotnet tool` publicado en NuGet.
-**Paquete / comando:** `envcheck` (ID libre en NuGet al momento de escribir este plan).
+**Paquete / comando:** `envparity` (ID libre en NuGet, verificado el 2026-11-12).
 **Objetivo real:** demostrar que sabes entregar software completo: especificación, código limpio, tests, CI/CD, paquete publicado y documentación.
 
 > La versión anterior de este plan quedó guardada como `plan-cli-env-validator.v1.md`.
@@ -29,7 +29,7 @@ Proyecto de portafolio de 1 a 2 semanas, pensado para verse terminado y publicad
 
 ## 0. Resumen ejecutivo
 
-`envcheck` compara un `.env` contra un archivo de referencia (`.env.example`) y reporta variables **faltantes**, **vacías** y **sobrantes**, con códigos de salida pensados para CI y salida `text` o `json`.
+`envparity` compara un `.env` contra un archivo de referencia (`.env.example`) y reporta variables **faltantes**, **vacías** y **sobrantes**, con códigos de salida pensados para CI y salida `text` o `json`.
 
 | Etapa | Tiempo |
 |---|---|
@@ -146,10 +146,10 @@ Casos especiales: `--help` y `--version` → `0`. Nunca se imprime un stack trac
 Texto de ayuda esperado:
 
 ```
-envcheck 1.0.0 — validate a .env file against a reference file
+envparity 1.0.0 — validate a .env file against a reference file
 
 Usage:
-  envcheck [options]
+  envparity [options]
 
 Options:
   --env <path>          File to validate (default: .env)
@@ -187,7 +187,7 @@ Con problemas:
 ⚠ 1 extra variable (use --strict to treat it as an error):
   DEBUG
 
-envcheck: 3 problems, 1 warning
+envparity: 3 problems, 1 warning
 ```
 
 Con error de parseo:
@@ -196,13 +196,13 @@ Con error de parseo:
 ✗ .env:12 invalid line (expected KEY=VALUE)
 ✗ .env:20 unterminated quoted value
 
-envcheck: 2 problems
+envparity: 2 problems
 ```
 
 Error de uso (stderr, exit 2):
 
 ```
-envcheck: file not found: .env
+envparity: file not found: .env
 ```
 
 ### 2.7 Fuera de alcance (a propósito)
@@ -409,16 +409,16 @@ Los tests del formateador comparan el JSON contra un string esperado (o lo deser
 
 ### 5.1 Proyectos
 
-- `src/EnvCheck` — la herramienta (un único proyecto).
-- `tests/EnvCheck.Tests` — unitarios + integración en proceso.
+- `src/EnvParity` — la herramienta (un único proyecto).
+- `tests/EnvParity.Tests` — unitarios + integración en proceso.
 
 Un solo proyecto de producción es suficiente y demuestra criterio: no hay sobre-arquitectura.
 
 ### 5.2 Clases y responsabilidades
 
 ```
-src/EnvCheck/
-├── EnvCheck.csproj
+src/EnvParity/
+├── EnvParity.csproj
 ├── Program.cs                  # mínimo: encoding, try/catch, return app.Run(...)
 ├── Cli/
 │   ├── CliApplication.cs       # Run(string[] args, TextWriter out, TextWriter err) : int
@@ -461,7 +461,7 @@ try
 }
 catch (Exception ex)
 {
-    Console.Error.WriteLine($"envcheck: {ex.Message}");
+    Console.Error.WriteLine($"envparity: {ex.Message}");
     return 2;
 }
 ```
@@ -498,16 +498,16 @@ catch (Exception ex)
 ### 5.5 Estructura final del repositorio
 
 ```
-envcheck/
+envparity/
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci.yml
 │   │   └── release.yml
 │   ├── ISSUE_TEMPLATE/bug_report.yml
 │   └── pull_request_template.md
-├── src/EnvCheck/
+├── src/EnvParity/
 │   └── ... (ver 5.2)
-├── tests/EnvCheck.Tests/
+├── tests/EnvParity.Tests/
 │   ├── Parsing/EnvFileParserTests.cs
 │   ├── Comparison/EnvComparerTests.cs
 │   ├── Cli/CliApplicationTests.cs
@@ -517,7 +517,7 @@ envcheck/
 ├── global.json
 ├── .editorconfig
 ├── .gitignore
-├── EnvCheck.slnx
+├── EnvParity.slnx
 ├── docs/
 │   ├── adr/0001-design-decisions.md
 │   └── parser-cases.md
@@ -551,13 +551,13 @@ Cada etapa tiene un **criterio de salida** verificable. No se pasa a la siguient
 - [x] Revisar `docs/adr/0001-design-decisions.md` y `docs/parser-cases.md`, y enlazarlos desde el README
 - [x] Definir el esquema JSON final (sección 4.3)
 - [x] Crear el repositorio con licencia MIT y `.gitignore` de .NET corregido
-- [x] Verificar que `envcheck` sigue libre en NuGet
+- [x] Verificar que `envparity` sigue libre en NuGet
 
 **Salida:** README con especificación y tabla de decisiones, aunque todavía no haya código.
 
 ### Etapa 1 — Setup (0,5 día)
 
-- [x] Crear solución, proyecto `src/EnvCheck` y proyecto de tests
+- [x] Crear solución, proyecto `src/EnvParity` y proyecto de tests
 - [x] `global.json`, `Directory.Build.props`, `.editorconfig`
 - [x] Activar nullable y warnings-as-errors
 - [x] Commit inicial: `chore: bootstrap solution`
@@ -565,7 +565,7 @@ Cada etapa tiene un **criterio de salida** verificable. No se pasa a la siguient
 
 **Salida:** `dotnet build` y `dotnet test` en verde con un test trivial.
 
-Nota de entorno: SDK **10.0.404** instalado en `~/.dotnet` (usuario, sin root; no está en `PATH`). El SDK 10 genera `EnvCheck.slnx` y esa es la solución del repo. Los tests desactivan CA1707 porque los nombres siguen la spec (`Parse_UnterminatedQuote_Invalid`).
+Nota de entorno: SDK **10.0.404** instalado en `~/.dotnet` (usuario, sin root; no está en `PATH`). El SDK 10 genera `EnvParity.slnx` y esa es la solución del repo. Los tests desactivan CA1707 porque los nombres siguen la spec (`Parse_UnterminatedQuote_Invalid`).
 
 ### Etapa 2 — Parser + tests (3 días)
 
@@ -605,20 +605,20 @@ Nota de entorno: SDK **10.0.404** instalado en `~/.dotnet` (usuario, sin root; n
 
 Objetivo: eliminar el riesgo de "el paquete no funciona" **antes** de invertir en CI y docs.
 
-- [ ] `PackAsTool=true`, `ToolCommandName=envcheck`
+- [ ] `PackAsTool=true`, `ToolCommandName=envparity`
 - [ ] `dotnet pack -c Release -o artifacts`
 - [ ] Instalar desde fuente local en un contenedor limpio:
 
 ```bash
 docker run --rm -v "$PWD:/src" -w /src mcr.microsoft.com/dotnet/sdk:10.0 bash -lc '
-  dotnet tool install -g --add-source /src/artifacts envcheck --version 0.1.0-alpha.1 &&
+  dotnet tool install -g --add-source /src/artifacts envparity --version 0.1.0-alpha.1 &&
   export PATH=$PATH:/root/.dotnet/tools &&
-  cd /tmp && envcheck --version
+  cd /tmp && envparity --version
 '
 ```
 
 - [ ] Publicar `0.1.0-alpha.1` en NuGet para **reservar el ID**, con OIDC (verificado: su scope «publish new packages» cubre la primera publicación; la política debe existir antes del push)
-- [ ] Verificar `dotnet tool install -g envcheck --prerelease`
+- [ ] Verificar `dotnet tool install -g envparity --prerelease`
 
 **Salida:** el comando funciona instalado globalmente desde NuGet. Este es el hito de riesgo cero.
 
@@ -765,12 +765,12 @@ jobs:
         shell: bash
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
-          PROJECT_VERSION=$(grep -oP '(?<=<Version>)[^<]+' src/EnvCheck/EnvCheck.csproj)
+          PROJECT_VERSION=$(grep -oP '(?<=<Version>)[^<]+' src/EnvParity/EnvParity.csproj)
           if [ "$VERSION" != "$PROJECT_VERSION" ]; then
             echo "Tag $VERSION does not match csproj version $PROJECT_VERSION" >&2
             exit 1
           fi
-      - run: dotnet pack src/EnvCheck/EnvCheck.csproj -c Release --no-build -o artifacts
+      - run: dotnet pack src/EnvParity/EnvParity.csproj -c Release --no-build -o artifacts
       - uses: NuGet/login@v1
         id: nuget
         with:
@@ -805,16 +805,16 @@ jobs:
 <PropertyGroup>
   <OutputType>Exe</OutputType>
   <PackAsTool>true</PackAsTool>
-  <ToolCommandName>envcheck</ToolCommandName>
-  <PackageId>envcheck</PackageId>
+  <ToolCommandName>envparity</ToolCommandName>
+  <PackageId>envparity</PackageId>
   <Version>1.0.0</Version>
   <Authors>Tu Nombre</Authors>
   <Description>Validate .env files against a reference file. Made for CI.</Description>
   <PackageTags>dotnet-tool;dotenv;env;ci;validation;linter</PackageTags>
   <PackageLicenseExpression>MIT</PackageLicenseExpression>
   <PackageReadmeFile>README.md</PackageReadmeFile>
-  <PackageProjectUrl>https://github.com/USUARIO/envcheck</PackageProjectUrl>
-  <RepositoryUrl>https://github.com/USUARIO/envcheck</RepositoryUrl>
+  <PackageProjectUrl>https://github.com/jhonemmir/envparity</PackageProjectUrl>
+  <RepositoryUrl>https://github.com/jhonemmir/envparity</RepositoryUrl>
   <RepositoryType>git</RepositoryType>
   <PublishRepositoryUrl>true</PublishRepositoryUrl>
 </PropertyGroup>
@@ -830,9 +830,9 @@ jobs:
 Checklist de verificación del paquete:
 
 - [ ] `dotnet pack` genera un `.nupkg` con el README embebido
-- [ ] `dotnet tool install -g --add-source ./artifacts envcheck --version X` funciona
-- [ ] El comando `envcheck` queda en `~/.dotnet/tools` (mencionarlo en el README)
-- [ ] `envcheck --help` y `--version` salen con `0`
+- [ ] `dotnet tool install -g --add-source ./artifacts envparity --version X` funciona
+- [ ] El comando `envparity` queda en `~/.dotnet/tools` (mencionarlo en el README)
+- [ ] `envparity --help` y `--version` salen con `0`
 - [ ] El paquete no contiene archivos de tests ni `.env` reales
 
 ---
@@ -844,7 +844,7 @@ Checklist de verificación del paquete:
 1. Nombre + una línea: qué hace y para quién.
 2. Badges: CI, versión NuGet, licencia.
 3. GIF de terminal (regenerable con `vhs`, no grabación manual).
-4. Instalación: `dotnet tool install -g envcheck` (+ nota de `PATH`).
+4. Instalación: `dotnet tool install -g envparity` (+ nota de `PATH`).
 5. Uso básico y salidas de ejemplo (éxito y fallo).
 6. Tabla de opciones y códigos de salida.
 7. **Uso en CI** con ejemplo real.
@@ -858,11 +858,11 @@ Ejemplo de uso en CI:
 ```yaml
 - name: Validate environment
   run: |
-    dotnet tool install -g envcheck
-    envcheck --env .env.ci --example .env.example --strict
+    dotnet tool install -g envparity
+    envparity --env .env.ci --example .env.example --strict
 ```
 
-Patrón típico: el pipeline genera `.env.ci` a partir de secrets/variables del repositorio y `envcheck` falla el job si falta alguna variable requerida.
+Patrón típico: el pipeline genera `.env.ci` a partir de secrets/variables del repositorio y `envparity` falla el job si falta alguna variable requerida.
 
 ### 10.2 Otros documentos
 
@@ -881,7 +881,7 @@ Patrón típico: el pipeline genera `.env.ci` a partir de secrets/variables del 
 
 ## 11. Calidad y definición de "terminado"
 
-- [ ] `dotnet tool install -g envcheck` funciona en una máquina limpia (contenedor)
+- [ ] `dotnet tool install -g envparity` funciona en una máquina limpia (contenedor)
 - [ ] CI verde en `main` en los tres SO
 - [ ] Parser al 95 %+ de cobertura de ramas y los 43 casos de `docs/parser-cases.md` cubiertos
 - [ ] Contrato JSON con test de regresión
@@ -921,14 +921,14 @@ Criterios de código:
 - Cascada de `.env.local` / `.env.{environment}`.
 - Interpolación `${VAR}` y escapes.
 - Valores multilínea.
-- `envcheck init` para generar `.env.example` desde `.env` ocultando valores.
+- `envparity init` para generar `.env.example` desde `.env` ocultando valores.
 - GitHub Action reutilizable que envuelva la herramienta.
 - Salida SARIF para GitHub Code Scanning.
 - `--ignore <patrón>` para variables exentas.
 - Detección de posibles secretos reales en `.env.example`.
 - Benchmarks (solo si algún día hay archivos grandes; hoy no aportan).
 
-Recomendación de extras si sobra tiempo: **`envcheck init`** y **GitHub Action reutilizable**. Son los que más demuestran criterio de producto y se conectan con la historia de CI.
+Recomendación de extras si sobra tiempo: **`envparity init`** y **GitHub Action reutilizable**. Son los que más demuestran criterio de producto y se conectan con la historia de CI.
 
 ---
 

@@ -1,4 +1,4 @@
-# ADR 0001 — Design decisions for envcheck 1.0
+# ADR 0001 — Design decisions for envparity 1.0
 
 | Field | Value |
 |---|---|
@@ -11,7 +11,7 @@
 
 ## Context
 
-`envcheck` is a .NET global tool that compares a `.env` file against a reference file (`.env.example` by default) and reports variables that are **missing**, **empty** or **extra**. It is a portfolio project with a deliberately small scope, but it must behave like production software: deterministic output, safe defaults, tests for every ambiguity and a package installable from NuGet.
+`envparity` is a .NET global tool that compares a `.env` file against a reference file (`.env.example` by default) and reports variables that are **missing**, **empty** or **extra**. It is a portfolio project with a deliberately small scope, but it must behave like production software: deterministic output, safe defaults, tests for every ambiguity and a package installable from NuGet.
 
 The difficult part is not the comparison, it is the `.env` format. There is no single specification: comments, quoting, `export`, inline `#`, duplicate keys and line endings are handled differently by different tools. A validator that guesses silently is worse than one that fails loudly.
 
@@ -149,7 +149,7 @@ Only if trusted publishing were unavailable for a brand-new ID would the fallbac
 
 | Risk | Mitigation |
 |---|---|
-| Package ID `envcheck` was free on 2026-11-11 but is not reserved | Publish `0.1.0-alpha.1` as soon as the CLI works, using OIDC (which supports first-time publishing of a new ID) |
+| Package ID `envparity` was free on 2026-11-12 but is not reserved | Publish `0.1.0-alpha.1` as soon as the CLI works, using OIDC (which supports first-time publishing of a new ID) |
 | `System.CommandLine` 3.0.0 is recent and most online examples target 2.0-beta | Pin the exact version and isolate parsing in `CliApplication` |
 | Parser ambiguity regressions | The 43-case table is the executable spec; no case is handled without a row |
 | Output contract drift | Snapshot tests for `text` and `json` |
@@ -201,14 +201,14 @@ Every decision is enforced by something concrete:
 - **Typed validation:** add it behind a new command or flag in v2, never by changing comparison semantics.
 - **`System.CommandLine`:** if a newer 3.0.x or 4.x appears, read the changelog and update this ADR before upgrading.
 - **Strict semantics:** if users ask to separate "extras" from "warnings", split the flag instead of overloading `--strict`.
-- **Package ID:** if `envcheck` becomes unavailable, rename `PackageId` before 1.0; `ToolCommandName` can stay `envcheck`.
+- **Package ID:** if `envparity` becomes unavailable, rename `PackageId` before 1.0; `ToolCommandName` can stay `envparity`.
 - **JSON schema:** bump `schemaVersion` only for breaking changes; additive changes keep version 1.
 
 ---
 
 ## Resumen en español
 
-Este ADR fija las 14 decisiones que definen la v1.0 de `envcheck`:
+Este ADR fija las 14 decisiones que definen la v1.0 de `envparity`:
 
 - **Alcance mínimo:** solo se comparan nombres y se detectan valores vacíos **en la intersección `E ∩ X`**; nunca se comparan ni imprimen valores.
 - **Clasificación disjunta:** faltante, vacía y sobrante; cada variable aparece en una sola lista. Una clave presente solo en un lado nunca es «vacía».

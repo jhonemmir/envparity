@@ -1,4 +1,4 @@
-# Parser test cases — envcheck 1.0
+# Parser test cases — envparity 1.0
 
 This document is the **executable specification** of the `.env` parser. Every numbered case maps to exactly one xUnit test. The parser is not considered correct until all 43 cases pass.
 
