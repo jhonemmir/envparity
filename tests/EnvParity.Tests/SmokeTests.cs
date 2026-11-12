@@ -1,4 +1,4 @@
-namespace EnvCheck.Tests;
+namespace EnvParity.Tests;
 
 public sealed class SmokeTests
 {
@@ -6,6 +6,6 @@ public sealed class SmokeTests
     public void TestRunner_RunsOnNet10()
     {
         Assert.Equal(10, Environment.Version.Major);
-        Assert.Equal("EnvCheck.Tests", typeof(SmokeTests).Assembly.GetName().Name);
+        Assert.Equal("EnvParity.Tests", typeof(SmokeTests).Assembly.GetName().Name);
     }
 }

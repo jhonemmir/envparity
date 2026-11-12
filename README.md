@@ -1,4 +1,4 @@
-# envcheck
+# envparity
 
 A .NET global tool that validates a `.env` file against a reference file
 (`.env.example` by default) and reports variables that are **missing**,

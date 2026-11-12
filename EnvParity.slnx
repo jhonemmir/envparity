@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/EnvParity/EnvParity.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/EnvParity.Tests/EnvParity.Tests.csproj" />
+  </Folder>
+</Solution>
