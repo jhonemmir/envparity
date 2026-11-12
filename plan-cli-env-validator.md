@@ -548,22 +548,24 @@ Cada etapa tiene un **criterio de salida** verificable. No se pasa a la siguient
 
 ### Etapa 0 — Decisiones y especificación (0,5 día)
 
-- [ ] Revisar `docs/adr/0001-design-decisions.md` y `docs/parser-cases.md`, y enlazarlos desde el README
-- [ ] Definir el esquema JSON final (sección 4.3)
-- [ ] Crear el repositorio con licencia MIT y `.gitignore` de .NET corregido
-- [ ] Verificar que `envcheck` sigue libre en NuGet
+- [x] Revisar `docs/adr/0001-design-decisions.md` y `docs/parser-cases.md`, y enlazarlos desde el README
+- [x] Definir el esquema JSON final (sección 4.3)
+- [x] Crear el repositorio con licencia MIT y `.gitignore` de .NET corregido
+- [x] Verificar que `envcheck` sigue libre en NuGet
 
 **Salida:** README con especificación y tabla de decisiones, aunque todavía no haya código.
 
 ### Etapa 1 — Setup (0,5 día)
 
-- [ ] Crear solución, proyecto `src/EnvCheck` y proyecto de tests
-- [ ] `global.json`, `Directory.Build.props`, `.editorconfig`
-- [ ] Activar nullable y warnings-as-errors
-- [ ] Commit inicial: `chore: bootstrap solution`
-- [ ] Instalar el SDK de .NET 10 en tu máquina (no está instalado)
+- [x] Crear solución, proyecto `src/EnvCheck` y proyecto de tests
+- [x] `global.json`, `Directory.Build.props`, `.editorconfig`
+- [x] Activar nullable y warnings-as-errors
+- [x] Commit inicial: `chore: bootstrap solution`
+- [x] Instalar el SDK de .NET 10 en tu máquina (no está instalado)
 
 **Salida:** `dotnet build` y `dotnet test` en verde con un test trivial.
+
+Nota de entorno: SDK **10.0.404** instalado en `~/.dotnet` (usuario, sin root; no está en `PATH`). El SDK 10 genera `EnvCheck.slnx` y esa es la solución del repo. Los tests desactivan CA1707 porque los nombres siguen la spec (`Parse_UnterminatedQuote_Invalid`).
 
 ### Etapa 2 — Parser + tests (3 días)
 
