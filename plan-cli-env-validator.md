@@ -569,13 +569,15 @@ Nota de entorno: SDK **10.0.404** instalado en `~/.dotnet` (usuario, sin root; n
 
 ### Etapa 2 — Parser + tests (3 días)
 
-- [ ] Implementar `EnvFileParser` puro (sin I/O)
-- [ ] Implementar `EnvFileReader` con UTF-8 estricto (leer bytes, no `File.ReadAllText`)
-- [ ] Cubrir **los 43 casos** de `docs/parser-cases.md` (el caso 33 se prueba como test de CLI), incluidas las aserciones de canaria de los casos 20, 21, 24 y 27
-- [ ] Mensajes de issue construidos solo con archivo y línea; `DecoderFallbackException` traducida a mensaje fijo
-- [ ] Cobertura del parser ≥ 95 % de ramas
+- [x] Implementar `EnvFileParser` puro (sin I/O)
+- [x] Implementar `EnvFileReader` con UTF-8 estricto (leer bytes, no `File.ReadAllText`)
+- [x] Cubrir **los 43 casos** de `docs/parser-cases.md` (el caso 33 se prueba como test de CLI), incluidas las aserciones de canaria de los casos 20, 21, 24 y 27
+- [x] Mensajes de issue construidos solo con archivo y línea; `DecoderFallbackException` traducida a mensaje fijo
+- [x] Cobertura del parser ≥ 95 % de ramas
 
 **Salida:** parser completo, tests nombrados según la tabla, cero casos "decididos sobre la marcha".
+
+Resultado: **43/43 nombres de test implementados** (90 ejecuciones contando las teorías), parser con **98,6 % de ramas** y lector con 100 %. `CliApplication` es todavía un esqueleto que solo resuelve el caso 33 (archivo no UTF-8 → `exit 2`, `stdout` vacío); el resto del CLI se completa en la Etapa 4.
 
 ### Etapa 3 — Comparador + tests (0,5 día)
 
