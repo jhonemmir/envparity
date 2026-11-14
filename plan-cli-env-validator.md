@@ -581,12 +581,14 @@ Resultado: **43/43 nombres de test implementados** (90 ejecuciones contando las 
 
 ### Etapa 3 — Comparador + tests (0,5 día)
 
-- [ ] `EnvComparer` puro, con conjuntos disjuntos
-- [ ] Orden alfabético ordinal
-- [ ] `ComparisonResult.IsValid(strict)` con la fórmula de 2.3
-- [ ] Tests: sin diferencias, solo faltantes, solo sobrantes, solo vacías, todas, vacía-sobrante (no duplicada), case-sensitive, `strict` con sobrantes, `strict` con duplicados
+- [x] `EnvComparer` puro, con conjuntos disjuntos
+- [x] Orden alfabético ordinal
+- [x] `ComparisonResult.IsValid(strict)` con la fórmula de 2.3
+- [x] Tests: sin diferencias, solo faltantes, solo sobrantes, solo vacías, todas, vacía-sobrante (no duplicada), case-sensitive, `strict` con sobrantes, `strict` con duplicados
 
 **Salida:** todos los tests de comparación en verde y la fórmula de validez en un solo lugar.
+
+Resultado: **16 tests de comparación**, comparador y `ComparisonResult` con **100 % de líneas y ramas**, y **106 tests** en total.
 
 ### Etapa 4 — CLI y salida (1 día)
 
