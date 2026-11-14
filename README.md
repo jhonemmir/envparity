@@ -4,8 +4,8 @@ A .NET global tool that validates a `.env` file against a reference file
 (`.env.example` by default) and reports variables that are **missing**,
 **empty** or **extra**. Values are never printed.
 
-> Status: parser and strict UTF-8 reader implemented, with the 43 cases from the
-> specification. CLI and comparer are in progress.
+> Status: parser, strict UTF-8 reader and comparer implemented. The CLI wiring and
+> the `text`/`json` formatters are in progress.
 
 ## Documentation
 
