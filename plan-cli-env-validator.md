@@ -592,18 +592,21 @@ Resultado: **16 tests de comparación**, comparador y `ComparisonResult` con **1
 
 ### Etapa 4 — CLI y salida (1 día)
 
-- [ ] `System.CommandLine` **3.0.0** para parsear (no seguir tutoriales de 2.0-beta)
-- [ ] Errores de parseo de argumentos → `2` (verificar el comportamiento por defecto de 3.0.0; históricamente devolvía `1`)
-- [ ] `--help`/`--version` → `0`
-- [ ] `--format text|json` con el contrato de la sección 4
-- [ ] Test que verifica que ningún valor de variable aparece en la salida `text` ni `json`, con una canaria sembrada en el archivo
-- [ ] Test de que `exit 2` deja `stdout` vacío y escribe el error solo en `stderr` (incluido el caso 33)
-- [ ] Colores con `NO_COLOR`, `--no-color` y redirección
-- [ ] Fallback ASCII si no hay UTF-8
-- [ ] `CliApplication.Run` testeado en proceso
-- [ ] Ctrl+C → `130`
+- [x] `System.CommandLine` **3.0.0** para parsear (no seguir tutoriales de 2.0-beta)
+- [x] Errores de parseo de argumentos → `2` (verificar el comportamiento por defecto de 3.0.0; históricamente devolvía `1`)
+- [x] `--help`/`--version` → `0`
+- [x] `--format text|json` con el contrato de la sección 4
+- [x] Test que verifica que ningún valor de variable aparece en la salida `text` ni `json`, con una canaria sembrada en el archivo
+- [x] Test de que `exit 2` deja `stdout` vacío y escribe el error solo en `stderr` (incluido el caso 33)
+- [x] Colores con `NO_COLOR`, `--no-color` y redirección
+- [x] Fallback ASCII si no hay UTF-8
+- [x] `CliApplication.Run` testeado en proceso
+- [x] Ctrl+C → `130`
 
 **Salida:** todos los ejemplos de 2.6 reproducidos por tests, incluido el JSON.
+
+Resultado: **151 tests** en total (45 nuevos de CLI/formateadores). Los mensajes de error de `System.CommandLine` no se reenvían porque están localizados: se traducen a plantillas fijas. Los archivos se leen antes de escribir `stdout`, de modo que `exit 2` nunca deja JSON parcial. `Ctrl+C` se cancela en `Program`, y token cancelado → `130`.
+Nota: los cambios de esta etapa **no se han subido al repositorio**; quedan en el árbol de trabajo para revisión.
 
 ### Etapa 5 — Spike de empaquetado + alpha (0,5 día)
 
