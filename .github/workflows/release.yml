@@ -1,0 +1,62 @@
+name: release
+
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+
+      - run: dotnet restore
+      - run: dotnet build -c Release --no-restore
+      - run: dotnet test -c Release --no-build
+
+      - name: Verify tag matches project version
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          PROJECT_VERSION=$(grep -oP '(?<=<Version>)[^<]+' src/EnvParity/EnvParity.csproj)
+          if [ "$VERSION" != "$PROJECT_VERSION" ]; then
+            echo "Tag $VERSION does not match csproj version $PROJECT_VERSION" >&2
+            exit 1
+          fi
+
+      - run: dotnet pack src/EnvParity/EnvParity.csproj -c Release --no-build -o artifacts
+
+      # Requires a trusted publishing policy for release.yml on nuget.org.
+      # NUGET_USER is the nuget.org profile name, not an email address.
+      - name: NuGet login (OIDC to temp API key)
+        uses: NuGet/login@v1
+        id: nuget
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      - name: NuGet push
+        run: >-
+          dotnet nuget push "artifacts/*.nupkg"
+          --api-key ${{ steps.nuget.outputs.NUGET_API_KEY }}
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate
+
+      - name: GitHub Release
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            echo "Release $GITHUB_REF_NAME already exists"
+          else
+            gh release create "$GITHUB_REF_NAME" artifacts/*.nupkg --generate-notes --verify-tag
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}

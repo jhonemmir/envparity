@@ -665,6 +665,10 @@ Resultado: `ci.yml` corre en Ubuntu, Windows y macOS. El run `44255863199` sobre
 
 **Salida:** `1.0.0` en NuGet + release en GitHub.
 
+Preparado: `.github/workflows/release.yml` se dispara con tags `v*.*.*`, usa `contents: write` e `id-token: write`, restaura con caché, compila, ejecuta los 151 tests, verifica que el tag coincida con `<Version>` del `.csproj`, empaqueta con `dotnet pack -c Release --no-build`, publica con OIDC y `--skip-duplicate`, y crea el GitHub Release con `--generate-notes`. La versión del `.csproj` se subió a `1.0.0` y el paquete `envparity.1.0.0.nupkg` se verificó localmente: nuspec con `1.0.0`, `DotnetToolSettings.xml`, instalación global en contenedor limpio, `--version`/`--help`/caso válido en `0`, archivo ausente en `2` con `stdout` vacío y JSON con problemas en `1`. La comprobación de tag se probó con `v1.0.0` (pasa) y `v1.0.1` (falla como se espera).
+
+Pendiente antes de crear el tag: una política de *trusted publishing* **separada** para `release.yml`, porque la existente apunta a `publish-alpha.yml` y NuGet asocia cada política a un único workflow. Después: empujar `v1.0.0`, verificar el run de release y la instalación limpia de `1.0.0` desde NuGet.
+
 ### Etapa 8 — Documentación y presentación (1 día)
 
 - [ ] README completo (sección 10)
