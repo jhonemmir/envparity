@@ -633,6 +633,15 @@ Resultado parcial: el paquete `envparity.0.1.0-alpha.1.nupkg` se genera sin adve
 
 Pendiente: publicar el alpha requiere una política de *trusted publishing* creada en nuget.org y un workflow con OIDC; en este entorno no hay token de NuGet ni `gh`, y la política no puede crearse desde el repositorio. Por eso las dos últimas casillas siguen sin marcar. El `toolVersion` informado sigue siendo `1.0.0` porque es el valor fijado por el contrato de salida, aunque el paquete sea `0.1.0-alpha.1`.
 
+Workflow preparado: `.github/workflows/publish-alpha.yml` (solo `workflow_dispatch`). Restaura, compila, ejecuta los 151 tests, empaqueta con `dotnet pack -c Release --no-build`, obtiene la clave temporal con `NuGet/login@v1` (`id-token: write`) y hace push con `--skip-duplicate`. Se validó localmente que el YAML parsea, que el paquete con `--no-build` conserva `DotnetToolSettings.xml` y que el login precede inmediatamente al push (clave válida 1 hora, un token → una clave).
+
+Pasos que quedan de parte del mantenedor, en este orden:
+
+1. Crear la política en nuget.org → *Trusted Publishing*: Repository Owner `jhonemmir`, Repository `envparity`, Workflow File `publish-alpha.yml` (solo el nombre, sin `.github/workflows/`), Environment vacío; owner = la cuenta que debe poseer el paquete; scopes «publish new packages» con glob `envparity`.
+2. Añadir el secret de GitHub `NUGET_USER` con el **nombre de perfil** de nuget.org (no el email).
+3. Lanzar el workflow manualmente en GitHub (Actions → *Publish alpha to NuGet* → *Run workflow*).
+4. Verificar `dotnet tool install -g envparity --prerelease` y marcar las dos casillas pendientes de esta etapa.
+
 ### Etapa 6 — CI (0,5 día)
 
 - [ ] `ci.yml` con matriz Ubuntu/Windows/macOS
