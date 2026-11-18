@@ -606,7 +606,7 @@ Resultado: **16 tests de comparación**, comparador y `ComparisonResult` con **1
 **Salida:** todos los ejemplos de 2.6 reproducidos por tests, incluido el JSON.
 
 Resultado: **151 tests** en total (45 nuevos de CLI/formateadores). Los mensajes de error de `System.CommandLine` no se reenvían porque están localizados: se traducen a plantillas fijas. Los archivos se leen antes de escribir `stdout`, de modo que `exit 2` nunca deja JSON parcial. `Ctrl+C` se cancela en `Program`, y token cancelado → `130`.
-Nota: los cambios de esta etapa **no se han subido al repositorio**; quedan en el árbol de trabajo para revisión.
+Nota: los cambios de esta etapa se publicaron en el commit `5ad3674`.
 
 ### Etapa 5 — Spike de empaquetado + alpha (0,5 día)
 
