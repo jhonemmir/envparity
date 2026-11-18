@@ -646,12 +646,14 @@ Pasos ejecutados para la publicación:
 
 ### Etapa 6 — CI (0,5 día)
 
-- [ ] `ci.yml` con matriz Ubuntu/Windows/macOS
-- [ ] Restore con cache, build, tests con cobertura, `dotnet format --verify-no-changes`
-- [ ] `concurrency` para cancelar runs viejos
-- [ ] Badge de CI en el README
+- [x] `ci.yml` con matriz Ubuntu/Windows/macOS
+- [x] Restore con cache, build, tests con cobertura, `dotnet format --verify-no-changes`
+- [x] `concurrency` para cancelar runs viejos
+- [x] Badge de CI en el README
 
 **Salida:** CI verde en `main` y en un PR de prueba.
+
+Resultado: `ci.yml` corre en Ubuntu, Windows y macOS. El run `44255863199` sobre `5184ce6` terminó en verde en los tres SO, con restore, build Release, 151 tests, cobertura y `dotnet format` correctos; los tres artefactos `coverage-<os>` se subieron. El PR de prueba #1 (rama temporal `ci/verify-pr` con un commit vacío) también terminó en verde en los tres SO y se cerró y eliminó después. La caché de `setup-dotnet` usa `cache-dependency-path: '**/packages.lock.json'`, habilitada por los dos `packages.lock.json` añadidos (`src` y `tests`). Se añadió `.gitattributes` con `eol=lf` para que el checkout de Windows/macOS mantenga los finales de línea que exige `.editorconfig` y `dotnet format` sea consistente. Cobertura local del run limpio: 94,3 % de líneas y 95,3 % de ramas globales, parser por encima del 95 % de ramas. El badge de CI quedó enlazado en el README.
 
 ### Etapa 7 — Release 1.0 (0,5 día)
 

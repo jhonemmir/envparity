@@ -8,7 +8,8 @@ A .NET global tool that validates a `.env` file against a reference file
 
 > Status: the CLI, `text`/`json` output, strict mode, exit codes and NuGet tool
 > packaging are implemented and verified. The `0.1.0-alpha.1` alpha is published
-> on NuGet and installable globally. CI and the final release are pending.
+> on NuGet and installable globally. CI is green on Ubuntu, Windows and macOS;
+> the final release is pending.
 
 ## Install the alpha
 
