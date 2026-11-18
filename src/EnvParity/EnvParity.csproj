@@ -2,10 +2,30 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+
+    <!-- NuGet global tool -->
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>envparity</ToolCommandName>
+    <PackageId>envparity</PackageId>
+    <Version>0.1.0-alpha.1</Version>
+
+    <!-- Package metadata -->
+    <Authors>Jhon Emmir Cundumi Riascos</Authors>
+    <Description>Validate a .env file against a reference file without ever printing values.</Description>
+    <PackageTags>dotnet;cli;env;dotenv;validation;configuration</PackageTags>
+    <PackageProjectUrl>https://github.com/jhonemmir/envparity</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jhonemmir/envparity.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.CommandLine" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>

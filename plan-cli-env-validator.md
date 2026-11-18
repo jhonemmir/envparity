@@ -612,9 +612,9 @@ Nota: los cambios de esta etapa se publicaron en el commit `5ad3674`.
 
 Objetivo: eliminar el riesgo de "el paquete no funciona" **antes** de invertir en CI y docs.
 
-- [ ] `PackAsTool=true`, `ToolCommandName=envparity`
-- [ ] `dotnet pack -c Release -o artifacts`
-- [ ] Instalar desde fuente local en un contenedor limpio:
+- [x] `PackAsTool=true`, `ToolCommandName=envparity`
+- [x] `dotnet pack -c Release -o artifacts`
+- [x] Instalar desde fuente local en un contenedor limpio:
 
 ```bash
 docker run --rm -v "$PWD:/src" -w /src mcr.microsoft.com/dotnet/sdk:10.0 bash -lc '
@@ -628,6 +628,10 @@ docker run --rm -v "$PWD:/src" -w /src mcr.microsoft.com/dotnet/sdk:10.0 bash -l
 - [ ] Verificar `dotnet tool install -g envparity --prerelease`
 
 **Salida:** el comando funciona instalado globalmente desde NuGet. Este es el hito de riesgo cero.
+
+Resultado parcial: el paquete `envparity.0.1.0-alpha.1.nupkg` se genera sin advertencias e incluye metadatos completos (id, versión, licencia MIT, README, repositorio y `DotnetTool`). La instalación desde fuente local se verificó en `mcr.microsoft.com/dotnet/sdk:10.0`: `envparity --version`, `--help`, validación correcta (`0`), archivo ausente (`2`, `stdout` vacío) y JSON con problemas (`1`) funcionan a través del shim de la herramienta global. El ID sigue libre (HTTP 404 en NuGet, 2026-11-17).
+
+Pendiente: publicar el alpha requiere una política de *trusted publishing* creada en nuget.org y un workflow con OIDC; en este entorno no hay token de NuGet ni `gh`, y la política no puede crearse desde el repositorio. Por eso las dos últimas casillas siguen sin marcar. El `toolVersion` informado sigue siendo `1.0.0` porque es el valor fijado por el contrato de salida, aunque el paquete sea `0.1.0-alpha.1`.
 
 ### Etapa 6 — CI (0,5 día)
 
