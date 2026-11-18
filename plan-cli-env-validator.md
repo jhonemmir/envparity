@@ -657,17 +657,19 @@ Resultado: `ci.yml` corre en Ubuntu, Windows y macOS. El run `44255863199` sobre
 
 ### Etapa 7 — Release 1.0 (0,5 día)
 
-- [ ] `release.yml` disparado por tags `v*.*.*`
-- [ ] Verificación tag == versión del `.csproj`
-- [ ] Publicación con `--skip-duplicate`
-- [ ] GitHub Release con `--generate-notes`
-- [ ] Instalación limpia de `1.0.0` verificada
+- [x] `release.yml` disparado por tags `v*.*.*`
+- [x] Verificación tag == versión del `.csproj`
+- [x] Publicación con `--skip-duplicate`
+- [x] GitHub Release con `--generate-notes`
+- [x] Instalación limpia de `1.0.0` verificada
 
 **Salida:** `1.0.0` en NuGet + release en GitHub.
 
-Preparado: `.github/workflows/release.yml` se dispara con tags `v*.*.*`, usa `contents: write` e `id-token: write`, restaura con caché, compila, ejecuta los 151 tests, verifica que el tag coincida con `<Version>` del `.csproj`, empaqueta con `dotnet pack -c Release --no-build`, publica con OIDC y `--skip-duplicate`, y crea el GitHub Release con `--generate-notes`. La versión del `.csproj` se subió a `1.0.0` y el paquete `envparity.1.0.0.nupkg` se verificó localmente: nuspec con `1.0.0`, `DotnetToolSettings.xml`, instalación global en contenedor limpio, `--version`/`--help`/caso válido en `0`, archivo ausente en `2` con `stdout` vacío y JSON con problemas en `1`. La comprobación de tag se probó con `v1.0.0` (pasa) y `v1.0.1` (falla como se espera).
+Resultado: `.github/workflows/release.yml` se dispara con tags `v*.*.*`, usa `contents: write` e `id-token: write`, restaura con caché, compila, ejecuta los 151 tests, verifica que el tag coincida con `<Version>` del `.csproj`, empaqueta con `dotnet pack -c Release --no-build`, publica con OIDC y `--skip-duplicate`, y crea el GitHub Release con `--generate-notes`. El tag anotado `v1.0.0` se creó sobre `3a16717` y el run `44417401954` terminó en verde con los 11 pasos correctos, incluido `Verify tag matches project version` y `NuGet push`; el log confirma `Your package was pushed.` NuGet indexó `1.0.0` (flat container y registro V3 en 200) y la instalación limpia con `dotnet tool install -g envparity` resolvió `1.0.0`: `--version`/`--help`/caso válido → `0`, archivo ausente → `2` con `stdout` vacío, JSON con problemas → `1`. El GitHub Release `v1.0.0` quedó creado con el asset `envparity.1.0.0.nupkg` y notas generadas. Se creó una política de *trusted publishing* separada para `release.yml`, además de la existente para `publish-alpha.yml`.
 
-Pendiente antes de crear el tag: una política de *trusted publishing* **separada** para `release.yml`, porque la existente apunta a `publish-alpha.yml` y NuGet asocia cada política a un único workflow. Después: empujar `v1.0.0`, verificar el run de release y la instalación limpia de `1.0.0` desde NuGet.
+Detalle corregido antes del tag: `dotnet nuget push` no expande el glob si va entre comillas; el workflow usa `artifacts/*.nupkg` sin comillas (commit `3a16717`). La comprobación de tag se probó en local con `v1.0.0` (pasa) y `v1.0.1` (falla como se espera).
+
+Nota de calidad: el paquete `1.0.0` se empaquetó desde el tag `3a16717`, cuyo `README.md` aún decía «Install the alpha» y «final release pending». El paquete ya es inmutable, así que esa copia del README no se puede corregir. El README del repositorio ya está actualizado; queda pendiente publicar un patch (`1.0.1`) después de cerrar el README definitivo de la Etapa 8, para que la página de NuGet muestre la documentación final. No afecta al funcionamiento de la herramienta: la instalación y el contrato de salida de `1.0.0` están verificados.
 
 ### Etapa 8 — Documentación y presentación (1 día)
 
