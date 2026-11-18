@@ -1,5 +1,7 @@
 # envparity
 
+[![CI](https://github.com/jhonemmir/envparity/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/jhonemmir/envparity/actions/workflows/ci.yml)
+
 A .NET global tool that validates a `.env` file against a reference file
 (`.env.example` by default) and reports variables that are **missing**,
 **empty** or **extra**. Values are never printed.
