@@ -624,23 +624,25 @@ docker run --rm -v "$PWD:/src" -w /src mcr.microsoft.com/dotnet/sdk:10.0 bash -l
 '
 ```
 
-- [ ] Publicar `0.1.0-alpha.1` en NuGet para **reservar el ID**, con OIDC (verificado: su scope «publish new packages» cubre la primera publicación; la política debe existir antes del push)
-- [ ] Verificar `dotnet tool install -g envparity --prerelease`
+- [x] Publicar `0.1.0-alpha.1` en NuGet para **reservar el ID**, con OIDC (verificado: su scope «publish new packages» cubre la primera publicación; la política debe existir antes del push)
+- [x] Verificar `dotnet tool install -g envparity --prerelease`
 
 **Salida:** el comando funciona instalado globalmente desde NuGet. Este es el hito de riesgo cero.
 
-Resultado parcial: el paquete `envparity.0.1.0-alpha.1.nupkg` se genera sin advertencias e incluye metadatos completos (id, versión, licencia MIT, README, repositorio y `DotnetTool`). La instalación desde fuente local se verificó en `mcr.microsoft.com/dotnet/sdk:10.0`: `envparity --version`, `--help`, validación correcta (`0`), archivo ausente (`2`, `stdout` vacío) y JSON con problemas (`1`) funcionan a través del shim de la herramienta global. El ID sigue libre (HTTP 404 en NuGet, 2026-11-17).
+Resultado: el paquete `envparity.0.1.0-alpha.1.nupkg` se genera sin advertencias e incluye metadatos completos (id, versión, licencia MIT, README, repositorio y `DotnetTool`). La instalación desde fuente local se verificó en `mcr.microsoft.com/dotnet/sdk:10.0`: `envparity --version`, `--help`, validación correcta (`0`), archivo ausente (`2`, `stdout` vacío) y JSON con problemas (`1`) funcionan a través del shim de la herramienta global.
 
-Pendiente: publicar el alpha requiere una política de *trusted publishing* creada en nuget.org y un workflow con OIDC; en este entorno no hay token de NuGet ni `gh`, y la política no puede crearse desde el repositorio. Por eso las dos últimas casillas siguen sin marcar. El `toolVersion` informado sigue siendo `1.0.0` porque es el valor fijado por el contrato de salida, aunque el paquete sea `0.1.0-alpha.1`.
+Publicación: `0.1.0-alpha.1` se publicó el 2026-11-18 mediante trusted publishing y está disponible en NuGet (`https://www.nuget.org/packages/envparity/0.1.0-alpha.1`). La instalación global desde NuGet se verificó en un contenedor limpio: `dotnet tool install -g envparity --version 0.1.0-alpha.1 --add-source https://www.nuget.org/api/v2/`; `--version` → `0`, `--help` → `0`, caso válido → `0`, archivo ausente → `2` con `stdout` de 0 bytes, JSON con problemas → `1`. El `.nupkg` servido por nuget.org incluye la firma del repositorio y `DotnetToolSettings.xml`. El `toolVersion` informado sigue siendo `1.0.0` porque es el valor fijado por el contrato de salida, aunque el paquete sea `0.1.0-alpha.1`.
 
-Workflow preparado: `.github/workflows/publish-alpha.yml` (solo `workflow_dispatch`). Restaura, compila, ejecuta los 151 tests, empaqueta con `dotnet pack -c Release --no-build`, obtiene la clave temporal con `NuGet/login@v1` (`id-token: write`) y hace push con `--skip-duplicate`. Se validó localmente que el YAML parsea, que el paquete con `--no-build` conserva `DotnetToolSettings.xml` y que el login precede inmediatamente al push (clave válida 1 hora, un token → una clave).
+Nota operativa: durante la verificación el blob y el `.nuspec` ya estaban disponibles en el *flat container*, pero el índice V3 (`registration5-semver1`) y la búsqueda tardaron más de 12 minutos en propagarse. Por eso `dotnet tool install` contra el source V3 por defecto aún no encontraba el paquete; el feed V2 lo resolvió de inmediato. No es un problema del paquete: la instalación por nombre desde el feed por defecto funcionará cuando termine la indexación.
 
-Pasos que quedan de parte del mantenedor, en este orden:
+Workflow: `.github/workflows/publish-alpha.yml` (solo `workflow_dispatch`). Restaura, compila, ejecuta los 151 tests, empaqueta con `dotnet pack -c Release --no-build`, obtiene la clave temporal con `NuGet/login@v1` (`id-token: write`) y hace push con `--skip-duplicate`. Se validó que el YAML parsea, que el paquete con `--no-build` conserva `DotnetToolSettings.xml` y que el login precede inmediatamente al push (clave válida 1 hora, un token → una clave). El primer run falló porque `actions/setup-dotnet` con `cache: true` exige `packages.lock.json`; se eliminó esa opción en el commit `94d9817` y el run siguiente terminó correctamente. Para la Etapa 6 se evaluará restaurar la caché añadiendo lock files.
 
-1. Crear la política en nuget.org → *Trusted Publishing*: Repository Owner `jhonemmir`, Repository `envparity`, Workflow File `publish-alpha.yml` (solo el nombre, sin `.github/workflows/`), Environment vacío; owner = la cuenta que debe poseer el paquete; scopes «publish new packages» con glob `envparity`.
-2. Añadir el secret de GitHub `NUGET_USER` con el **nombre de perfil** de nuget.org (no el email).
-3. Lanzar el workflow manualmente en GitHub (Actions → *Publish alpha to NuGet* → *Run workflow*).
-4. Verificar `dotnet tool install -g envparity --prerelease` y marcar las dos casillas pendientes de esta etapa.
+Pasos ejecutados para la publicación:
+
+1. Política en nuget.org → *Trusted Publishing*: Repository Owner `jhonemmir`, Repository `envparity`, Workflow File `publish-alpha.yml` (solo el nombre), Environment vacío, scope «Push new packages and package versions» con glob `envparity`, sin scopes de unlist ni staging.
+2. Secret de GitHub `NUGET_USER` con el **nombre de perfil** de nuget.org (no el email).
+3. Workflow lanzado manualmente en GitHub (Actions → *Publish alpha to NuGet* → *Run workflow*), con OIDC y sin API key persistente.
+4. Instalación global verificada desde NuGet; casillas de esta etapa marcadas.
 
 ### Etapa 6 — CI (0,5 día)
 
