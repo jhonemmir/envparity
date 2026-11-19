@@ -668,7 +668,7 @@ Resultado: `.github/workflows/release.yml` se dispara con tags `v*.*.*`, usa `co
 
 Detalle corregido antes del tag: `dotnet nuget push` no expande el glob si va entre comillas; el workflow usa `artifacts/*.nupkg` sin comillas (commit `9f82a67`). La comprobación de tag se probó en local con `v1.0.0` (pasa) y `v1.0.1` (falla como se espera).
 
-Nota de calidad: el paquete `1.0.0` se empaquetó desde el tag `9f82a67`, cuyo `README.md` aún decía «Install the alpha» y «final release pending». El paquete ya es inmutable, así que esa copia del README no se puede corregir. El README del repositorio ya está actualizado; queda pendiente publicar un patch (`1.0.1`) después de cerrar el README definitivo de la Etapa 8, para que la página de NuGet muestre la documentación final. No afecta al funcionamiento de la herramienta: la instalación y el contrato de salida de `1.0.0` están verificados.
+Nota de calidad (resuelta): el paquete `1.0.0` se empaquetó desde el tag `9f82a67`, cuyo `README.md` aún decía «Install the alpha» y «final release pending», y el paquete es inmutable. Se publicó el patch `1.0.1` desde el tag `v1.0.1` (commit `1314438`) con el README definitivo dentro del paquete: verificado descargando el `.nupkg` de NuGet (287 líneas, sin la mención al alpha), instalación limpia con `dotnet tool install -g envparity` resolviendo `1.0.1`, `--version`/`--help`/caso válido → `0`, archivo ausente → `2` con `stdout` vacío y JSON con `toolVersion` `1.0.1` en `1`. El comportamiento de la herramienta no cambió; fue un patch solo de documentación.
 
 ### Etapa 8 — Documentación y presentación (1 día)
 
@@ -677,6 +677,7 @@ Nota de calidad: el paquete `1.0.0` se empaquetó desde el tag `9f82a67`, cuyo `
 - [x] `CONTRIBUTING.md` y `SECURITY.md`
 - [x] GIF reproducible con `vhs`
 - [x] Topics del repo y descripción
+- [x] Repo público y saneado (sin borradores ni workflows obsoletos)
 - [ ] Repo fijado en el perfil
 
 **Salida:** el repo se entiende en 30 segundos y se instala en una línea.
@@ -684,6 +685,8 @@ Nota de calidad: el paquete `1.0.0` se empaquetó desde el tag `9f82a67`, cuyo `
 Resultado: el README quedó completo con badges de CI, NuGet y licencia, GIF, instalación de una línea con nota de `PATH`, uso básico con salidas reales, tabla de opciones y códigos de salida, uso en CI, resumen de reglas del parser, contrato JSON con ejemplo, roadmap, contribución y seguridad, más un «Resumen en español» al final (se optó por resumen inline en lugar de `README.es.md` para no duplicar la fuente). `CHANGELOG.md` sigue Keep a Changelog 1.1.0 y SemVer, con `1.0.0` y `0.1.0-alpha.1`. `CONTRIBUTING.md` documenta build, tests, cobertura, formato, reglas de tests, commits, regeneración del GIF y proceso de release. `SECURITY.md` describe el reporte privado vía GitHub Security Advisories, las versiones soportadas y la garantía de que nunca se imprimen valores. El GIF (`docs/demo.gif`, 82 KB, 11,8 s) se genera con `vhs docs/demo.tape` y usa el binario Release local mediante un symlink; el setup corre en una sección oculta y la grabación arranca limpia con el caso con problemas, `--strict` y el caso válido. Topics del repo: `dotnet`, `dotnet-tool`, `dotenv`, `env`, `ci`, `cli`, `validation`; descripción «Validate .env files against .env.example in CI» y homepage apuntando a NuGet. Queda pendiente fijar el repo en el perfil, que es una acción manual de la cuenta.
 
 Siguiente paso acordado: publicar un patch `1.0.1` con este README definitivo, porque el paquete `1.0.0` es inmutable y su copia interna todavía decía «Install the alpha».
+
+Cierre del patch: `1.0.1` se publicó desde el tag `v1.0.1` (commit `1314438`) con el run `44444132722` en verde en sus 11 pasos. NuGet indexó la versión y el paquete descargado contiene el README final. Antes de publicar, el repositorio pasó a público y se saneó: se eliminaron `plan-cli-env-validator.v1.md` (borrador superado) y `.github/workflows/publish-alpha.yml` (reemplazado por `release.yml`), y se reescribió el historial completo para usar `1455657105+jhonemmir@users.noreply.github.com` en commits y tags, con force-push de `main` y `v1.0.0`; el paquete `1.0.0` de NuGet no se vio afectado. El repo quedó público con descripción, homepage y topics; solo falta fijarlo en el perfil, que GitHub no expone por API y hay que hacer desde la web.
 
 ---
 
