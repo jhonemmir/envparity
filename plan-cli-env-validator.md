@@ -6,7 +6,6 @@ Proyecto de portafolio de 1 a 2 semanas, pensado para verse terminado y publicad
 **Paquete / comando:** `envparity` (ID libre en NuGet, verificado el 2026-11-12).
 **Objetivo real:** demostrar que sabes entregar software completo: especificación, código limpio, tests, CI/CD, paquete publicado y documentación.
 
-> La versión anterior de este plan quedó guardada como `plan-cli-env-validator.v1.md`.
 
 ---
 
@@ -606,7 +605,7 @@ Resultado: **16 tests de comparación**, comparador y `ComparisonResult` con **1
 **Salida:** todos los ejemplos de 2.6 reproducidos por tests, incluido el JSON.
 
 Resultado: **151 tests** en total (45 nuevos de CLI/formateadores). Los mensajes de error de `System.CommandLine` no se reenvían porque están localizados: se traducen a plantillas fijas. Los archivos se leen antes de escribir `stdout`, de modo que `exit 2` nunca deja JSON parcial. `Ctrl+C` se cancela en `Program`, y token cancelado → `130`.
-Nota: los cambios de esta etapa se publicaron en el commit `5ad3674`.
+Nota: los cambios de esta etapa se publicaron en el commit `9d0ae0a`.
 
 ### Etapa 5 — Spike de empaquetado + alpha (0,5 día)
 
@@ -635,11 +634,11 @@ Publicación: `0.1.0-alpha.1` se publicó el 2026-11-18 mediante trusted publish
 
 Nota operativa: durante la verificación el blob y el `.nuspec` ya estaban disponibles en el *flat container*, pero el índice V3 (`registration5-semver1`) y la búsqueda tardaron más de 12 minutos en propagarse. Por eso `dotnet tool install` contra el source V3 por defecto aún no encontraba el paquete; el feed V2 lo resolvió de inmediato. No es un problema del paquete: la instalación por nombre desde el feed por defecto funcionará cuando termine la indexación.
 
-Workflow: `.github/workflows/publish-alpha.yml` (solo `workflow_dispatch`). Restaura, compila, ejecuta los 151 tests, empaqueta con `dotnet pack -c Release --no-build`, obtiene la clave temporal con `NuGet/login@v1` (`id-token: write`) y hace push con `--skip-duplicate`. Se validó que el YAML parsea, que el paquete con `--no-build` conserva `DotnetToolSettings.xml` y que el login precede inmediatamente al push (clave válida 1 hora, un token → una clave). El primer run falló porque `actions/setup-dotnet` con `cache: true` exige `packages.lock.json`; se eliminó esa opción en el commit `94d9817` y el run siguiente terminó correctamente. Para la Etapa 6 se evaluará restaurar la caché añadiendo lock files.
+Workflow: `.github/workflows/publish-alpha.yml` (solo `workflow_dispatch`). Restaura, compila, ejecuta los 151 tests, empaqueta con `dotnet pack -c Release --no-build`, obtiene la clave temporal con `NuGet/login@v1` (`id-token: write`) y hace push con `--skip-duplicate`. Se validó que el YAML parsea, que el paquete con `--no-build` conserva `DotnetToolSettings.xml` y que el login precede inmediatamente al push (clave válida 1 hora, un token → una clave). El primer run falló porque `actions/setup-dotnet` con `cache: true` exige `packages.lock.json`; se eliminó esa opción en el commit `37f9cc0` y el run siguiente terminó correctamente. Para la Etapa 6 se evaluará restaurar la caché añadiendo lock files. El workflow se retiró después de 1.0: `release.yml` cubre las publicaciones estables y la política de nuget.org asociada a `publish-alpha.yml` ya no se usa.
 
 Pasos ejecutados para la publicación:
 
-1. Política en nuget.org → *Trusted Publishing*: Repository Owner `jhonemmir`, Repository `envparity`, Workflow File `publish-alpha.yml` (solo el nombre), Environment vacío, scope «Push new packages and package versions» con glob `envparity`, sin scopes de unlist ni staging.
+1. Política en nuget.org → *Trusted Publishing*: Repository Owner `jhonemmir`, Repository `envparity`, Workflow File `publish-alpha.yml` (solo el nombre), Environment vacío, scope «Push new packages and package versions» con glob `envparity`, sin scopes de unlist ni staging. Esa política se puede eliminar ahora que el workflow fue retirado.
 2. Secret de GitHub `NUGET_USER` con el **nombre de perfil** de nuget.org (no el email).
 3. Workflow lanzado manualmente en GitHub (Actions → *Publish alpha to NuGet* → *Run workflow*), con OIDC y sin API key persistente.
 4. Instalación global verificada desde NuGet; casillas de esta etapa marcadas.
@@ -653,7 +652,7 @@ Pasos ejecutados para la publicación:
 
 **Salida:** CI verde en `main` y en un PR de prueba.
 
-Resultado: `ci.yml` corre en Ubuntu, Windows y macOS. El run `44255863199` sobre `5184ce6` terminó en verde en los tres SO, con restore, build Release, 151 tests, cobertura y `dotnet format` correctos; los tres artefactos `coverage-<os>` se subieron. El PR de prueba #1 (rama temporal `ci/verify-pr` con un commit vacío) también terminó en verde en los tres SO y se cerró y eliminó después. La caché de `setup-dotnet` usa `cache-dependency-path: '**/packages.lock.json'`, habilitada por los dos `packages.lock.json` añadidos (`src` y `tests`). Se añadió `.gitattributes` con `eol=lf` para que el checkout de Windows/macOS mantenga los finales de línea que exige `.editorconfig` y `dotnet format` sea consistente. Cobertura local del run limpio: 94,3 % de líneas y 95,3 % de ramas globales, parser por encima del 95 % de ramas. El badge de CI quedó enlazado en el README.
+Resultado: `ci.yml` corre en Ubuntu, Windows y macOS. El run `44255863199` sobre `c4514c1` terminó en verde en los tres SO, con restore, build Release, 151 tests, cobertura y `dotnet format` correctos; los tres artefactos `coverage-<os>` se subieron. El PR de prueba #1 (rama temporal `ci/verify-pr` con un commit vacío) también terminó en verde en los tres SO y se cerró y eliminó después. La caché de `setup-dotnet` usa `cache-dependency-path: '**/packages.lock.json'`, habilitada por los dos `packages.lock.json` añadidos (`src` y `tests`). Se añadió `.gitattributes` con `eol=lf` para que el checkout de Windows/macOS mantenga los finales de línea que exige `.editorconfig` y `dotnet format` sea consistente. Cobertura local del run limpio: 94,3 % de líneas y 95,3 % de ramas globales, parser por encima del 95 % de ramas. El badge de CI quedó enlazado en el README.
 
 ### Etapa 7 — Release 1.0 (0,5 día)
 
@@ -665,11 +664,11 @@ Resultado: `ci.yml` corre en Ubuntu, Windows y macOS. El run `44255863199` sobre
 
 **Salida:** `1.0.0` en NuGet + release en GitHub.
 
-Resultado: `.github/workflows/release.yml` se dispara con tags `v*.*.*`, usa `contents: write` e `id-token: write`, restaura con caché, compila, ejecuta los 151 tests, verifica que el tag coincida con `<Version>` del `.csproj`, empaqueta con `dotnet pack -c Release --no-build`, publica con OIDC y `--skip-duplicate`, y crea el GitHub Release con `--generate-notes`. El tag anotado `v1.0.0` se creó sobre `3a16717` y el run `44417401954` terminó en verde con los 11 pasos correctos, incluido `Verify tag matches project version` y `NuGet push`; el log confirma `Your package was pushed.` NuGet indexó `1.0.0` (flat container y registro V3 en 200) y la instalación limpia con `dotnet tool install -g envparity` resolvió `1.0.0`: `--version`/`--help`/caso válido → `0`, archivo ausente → `2` con `stdout` vacío, JSON con problemas → `1`. El GitHub Release `v1.0.0` quedó creado con el asset `envparity.1.0.0.nupkg` y notas generadas. Se creó una política de *trusted publishing* separada para `release.yml`, además de la existente para `publish-alpha.yml`.
+Resultado: `.github/workflows/release.yml` se dispara con tags `v*.*.*`, usa `contents: write` e `id-token: write`, restaura con caché, compila, ejecuta los 151 tests, verifica que el tag coincida con `<Version>` del `.csproj`, empaqueta con `dotnet pack -c Release --no-build`, publica con OIDC y `--skip-duplicate`, y crea el GitHub Release con `--generate-notes`. El tag anotado `v1.0.0` se creó sobre `9f82a67` y el run `44417401954` terminó en verde con los 11 pasos correctos, incluido `Verify tag matches project version` y `NuGet push`; el log confirma `Your package was pushed.` NuGet indexó `1.0.0` (flat container y registro V3 en 200) y la instalación limpia con `dotnet tool install -g envparity` resolvió `1.0.0`: `--version`/`--help`/caso válido → `0`, archivo ausente → `2` con `stdout` vacío, JSON con problemas → `1`. El GitHub Release `v1.0.0` quedó creado con el asset `envparity.1.0.0.nupkg` y notas generadas. Se creó una política de *trusted publishing* separada para `release.yml`, además de la existente para `publish-alpha.yml` (retirada junto con ese workflow).
 
-Detalle corregido antes del tag: `dotnet nuget push` no expande el glob si va entre comillas; el workflow usa `artifacts/*.nupkg` sin comillas (commit `3a16717`). La comprobación de tag se probó en local con `v1.0.0` (pasa) y `v1.0.1` (falla como se espera).
+Detalle corregido antes del tag: `dotnet nuget push` no expande el glob si va entre comillas; el workflow usa `artifacts/*.nupkg` sin comillas (commit `9f82a67`). La comprobación de tag se probó en local con `v1.0.0` (pasa) y `v1.0.1` (falla como se espera).
 
-Nota de calidad: el paquete `1.0.0` se empaquetó desde el tag `3a16717`, cuyo `README.md` aún decía «Install the alpha» y «final release pending». El paquete ya es inmutable, así que esa copia del README no se puede corregir. El README del repositorio ya está actualizado; queda pendiente publicar un patch (`1.0.1`) después de cerrar el README definitivo de la Etapa 8, para que la página de NuGet muestre la documentación final. No afecta al funcionamiento de la herramienta: la instalación y el contrato de salida de `1.0.0` están verificados.
+Nota de calidad: el paquete `1.0.0` se empaquetó desde el tag `9f82a67`, cuyo `README.md` aún decía «Install the alpha» y «final release pending». El paquete ya es inmutable, así que esa copia del README no se puede corregir. El README del repositorio ya está actualizado; queda pendiente publicar un patch (`1.0.1`) después de cerrar el README definitivo de la Etapa 8, para que la página de NuGet muestre la documentación final. No afecta al funcionamiento de la herramienta: la instalación y el contrato de salida de `1.0.0` están verificados.
 
 ### Etapa 8 — Documentación y presentación (1 día)
 

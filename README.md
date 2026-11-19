@@ -3,13 +3,13 @@
 [![CI](https://github.com/jhonemmir/envparity/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/jhonemmir/envparity/actions/workflows/ci.yml)
 [![NuGet](https://img.shields.io/nuget/v/envparity)](https://www.nuget.org/packages/envparity)
 [![NuGet downloads](https://img.shields.io/nuget/dt/envparity)](https://www.nuget.org/packages/envparity)
-[![License: MIT](https://img.shields.io/github/license/jhonemmir/envparity)](LICENSE)
+[![License: MIT](https://img.shields.io/github/license/jhonemmir/envparity)](https://github.com/jhonemmir/envparity/blob/main/LICENSE)
 
 A .NET global tool that validates a `.env` file against a reference file
 (`.env.example` by default) and reports variables that are **missing**, **empty**
 or **extra**. Values are never printed, so it is safe to run in shared CI logs.
 
-![envparity demo](docs/demo.gif)
+![envparity demo](https://raw.githubusercontent.com/jhonemmir/envparity/main/docs/demo.gif)
 
 ## Why
 
@@ -170,9 +170,9 @@ compares or emits them.
 | Encoding | Strict UTF-8; a leading BOM is ignored, UTF-16 and invalid bytes exit `2` |
 | Line endings | LF, CRLF and CR are accepted; empty files are valid |
 
-The full executable specification is [`docs/parser-cases.md`](docs/parser-cases.md)
+The full executable specification is [`docs/parser-cases.md`](https://github.com/jhonemmir/envparity/blob/main/docs/parser-cases.md)
 with 43 cases, one test per case. The rationale for each decision is in
-[ADR 0001](docs/adr/0001-design-decisions.md).
+[ADR 0001](https://github.com/jhonemmir/envparity/blob/main/docs/adr/0001-design-decisions.md).
 
 ## JSON output
 
@@ -182,7 +182,7 @@ symbols):
 ```json
 {
   "schemaVersion": 1,
-  "toolVersion": "1.0.0",
+  "toolVersion": "1.0.1",
   "valid": false,
   "strict": false,
   "files": {
@@ -231,7 +231,7 @@ Contract rules:
 
 The tool never prints or serializes variable values, and issue messages are fixed
 templates that only include the file name and line number. See
-[SECURITY.md](SECURITY.md) for the reporting process.
+[SECURITY.md](https://github.com/jhonemmir/envparity/blob/main/SECURITY.md) for the reporting process.
 
 ## Roadmap
 
@@ -248,12 +248,12 @@ Out of scope for 1.0, in rough priority order:
 ## Contributing
 
 Build, test, formatting and release instructions are in
-[CONTRIBUTING.md](CONTRIBUTING.md). The changelog follows
+[CONTRIBUTING.md](https://github.com/jhonemmir/envparity/blob/main/CONTRIBUTING.md). The changelog follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## License
 
-[MIT](LICENSE)
+[MIT](https://github.com/jhonemmir/envparity/blob/main/LICENSE)
 
 ---
 
@@ -279,9 +279,9 @@ envparity
 - **Parser:** UTF-8 estricto, comentarios solo fuera de comillas, comillas
   simples o dobles con valor crudo y `\"` que no cierra, última clave repetida
   gana con warning. Los 43 casos están en
-  [`docs/parser-cases.md`](docs/parser-cases.md).
+  [`docs/parser-cases.md`](https://github.com/jhonemmir/envparity/blob/main/docs/parser-cases.md).
 - **Decisiones:** el razonamiento completo está en
-  [ADR 0001](docs/adr/0001-design-decisions.md).
+  [ADR 0001](https://github.com/jhonemmir/envparity/blob/main/docs/adr/0001-design-decisions.md).
 
 Fuera de alcance en 1.0: comparar o validar valores, interpolación, archivos en
 cascada y valores multilínea.

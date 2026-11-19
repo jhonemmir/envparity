@@ -7,10 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-11-18
+
 ### Changed
 
-- Documentation: final README with badges, a reproducible terminal demo,
-  installation, CI usage and the JSON contract.
+- Documentation-only patch: refresh the README embedded in the NuGet package
+  with badges, a reproducible terminal demo, installation, CI usage and the JSON
+  contract. No behavior changes.
 
 ## [1.0.0] - 2026-11-18
 
@@ -49,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   exit codes and global tool packaging.
 - NuGet trusted publishing (OIDC) without long-lived API keys.
 
-[Unreleased]: https://github.com/jhonemmir/envparity/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/jhonemmir/envparity/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/jhonemmir/envparity/releases/tag/v1.0.1
 [1.0.0]: https://github.com/jhonemmir/envparity/releases/tag/v1.0.0
 [0.1.0-alpha.1]: https://www.nuget.org/packages/envparity/0.1.0-alpha.1

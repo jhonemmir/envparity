@@ -49,7 +49,7 @@ public sealed class JsonResultFormatterTests
         var root = document.RootElement;
 
         Assert.Equal(1, root.GetProperty("schemaVersion").GetInt32());
-        Assert.Equal("1.0.0", root.GetProperty("toolVersion").GetString());
+        Assert.Equal("1.0.1", root.GetProperty("toolVersion").GetString());
         Assert.False(root.GetProperty("valid").GetBoolean());
         Assert.False(root.GetProperty("strict").GetBoolean());
         Assert.Equal(".env", root.GetProperty("files").GetProperty("env").GetString());

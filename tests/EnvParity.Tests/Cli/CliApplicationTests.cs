@@ -137,7 +137,7 @@ public sealed class CliApplicationTests
     {
         var expected = string.Join("\n", new[]
         {
-            "envparity 1.0.0 — validate a .env file against a reference file",
+            "envparity 1.0.1 — validate a .env file against a reference file",
             string.Empty,
             "Usage:",
             "  envparity [options]",
@@ -171,7 +171,7 @@ public sealed class CliApplicationTests
         var (exit, output, error) = Run(["--version"]);
 
         Assert.Equal(0, exit);
-        Assert.Equal($"envparity 1.0.0{Environment.NewLine}", output);
+        Assert.Equal($"envparity 1.0.1{Environment.NewLine}", output);
         Assert.Empty(error);
     }
 
@@ -335,7 +335,7 @@ public sealed class CliApplicationTests
         var (exit, output, _) = Run(["--help"], useUnicode: false);
 
         Assert.Equal(0, exit);
-        Assert.StartsWith("envparity 1.0.0 - validate", output, StringComparison.Ordinal);
+        Assert.StartsWith("envparity 1.0.1 - validate", output, StringComparison.Ordinal);
         Assert.DoesNotContain("—", output, StringComparison.Ordinal);
     }
 
