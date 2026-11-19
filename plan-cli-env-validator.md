@@ -673,14 +673,18 @@ Nota de calidad: el paquete `1.0.0` se empaquetó desde el tag `3a16717`, cuyo `
 
 ### Etapa 8 — Documentación y presentación (1 día)
 
-- [ ] README completo (sección 10)
-- [ ] `CHANGELOG.md` (Keep a Changelog)
-- [ ] `CONTRIBUTING.md` y `SECURITY.md`
-- [ ] GIF reproducible con `vhs`
-- [ ] Topics del repo y descripción
+- [x] README completo (sección 10)
+- [x] `CHANGELOG.md` (Keep a Changelog)
+- [x] `CONTRIBUTING.md` y `SECURITY.md`
+- [x] GIF reproducible con `vhs`
+- [x] Topics del repo y descripción
 - [ ] Repo fijado en el perfil
 
 **Salida:** el repo se entiende en 30 segundos y se instala en una línea.
+
+Resultado: el README quedó completo con badges de CI, NuGet y licencia, GIF, instalación de una línea con nota de `PATH`, uso básico con salidas reales, tabla de opciones y códigos de salida, uso en CI, resumen de reglas del parser, contrato JSON con ejemplo, roadmap, contribución y seguridad, más un «Resumen en español» al final (se optó por resumen inline en lugar de `README.es.md` para no duplicar la fuente). `CHANGELOG.md` sigue Keep a Changelog 1.1.0 y SemVer, con `1.0.0` y `0.1.0-alpha.1`. `CONTRIBUTING.md` documenta build, tests, cobertura, formato, reglas de tests, commits, regeneración del GIF y proceso de release. `SECURITY.md` describe el reporte privado vía GitHub Security Advisories, las versiones soportadas y la garantía de que nunca se imprimen valores. El GIF (`docs/demo.gif`, 82 KB, 11,8 s) se genera con `vhs docs/demo.tape` y usa el binario Release local mediante un symlink; el setup corre en una sección oculta y la grabación arranca limpia con el caso con problemas, `--strict` y el caso válido. Topics del repo: `dotnet`, `dotnet-tool`, `dotenv`, `env`, `ci`, `cli`, `validation`; descripción «Validate .env files against .env.example in CI» y homepage apuntando a NuGet. Queda pendiente fijar el repo en el perfil, que es una acción manual de la cuenta.
+
+Siguiente paso acordado: publicar un patch `1.0.1` con este README definitivo, porque el paquete `1.0.0` es inmutable y su copia interna todavía decía «Install the alpha».
 
 ---
 
@@ -911,14 +915,14 @@ Patrón típico: el pipeline genera `.env.ci` a partir de secrets/variables del 
 
 ## 11. Calidad y definición de "terminado"
 
-- [ ] `dotnet tool install -g envparity` funciona en una máquina limpia (contenedor)
-- [ ] CI verde en `main` en los tres SO
-- [ ] Parser al 95 %+ de cobertura de ramas y los 43 casos de `docs/parser-cases.md` cubiertos
-- [ ] Contrato JSON con test de regresión
-- [ ] README con GIF, instalación de una línea, ejemplos y uso en CI
-- [ ] `CHANGELOG.md`, `CONTRIBUTING.md`, `SECURITY.md`, `LICENSE`
-- [ ] Release `1.0.0` en GitHub y en NuGet
-- [ ] Repo fijado en el perfil
+- [x] `dotnet tool install -g envparity` funciona en una máquina limpia (contenedor)
+- [x] CI verde en `main` en los tres SO
+- [x] Parser al 95 %+ de cobertura de ramas y los 43 casos de `docs/parser-cases.md` cubiertos
+- [x] Contrato JSON con test de regresión
+- [x] README con GIF, instalación de una línea, ejemplos y uso en CI
+- [x] `CHANGELOG.md`, `CONTRIBUTING.md`, `SECURITY.md`, `LICENSE`
+- [x] Release `1.0.0` en GitHub y en NuGet
+- [ ] Repo fijado en el perfil (acción manual de la cuenta; se documenta como pendiente)
 
 Criterios de código:
 
